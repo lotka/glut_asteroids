@@ -4,7 +4,7 @@ using namespace std;
 
 int thrust;
 int steer;
-extern objectShape asteroid[5];
+extern objectShape asteroid[ASTEROID_SHAPE_NUMBER];
 extern objectShape ship;
 
 #define ANGULAR_VELOCITY 4
@@ -19,7 +19,6 @@ public:
     float speed;
     float spin;
     int type;
-    int asteroidType;
     objectShape shape;
 
     object()
@@ -31,18 +30,18 @@ public:
         angle = 0.0;
         speed = 0.0;
         spin = 0.0;
-        type = 0;
+        type = GARBAGE_OBJECT;
     }
 
     void update()
     {
-        if(type==1)
+        if(type==SHIP)
         updateShip();
 
-        if(type==2)
+        if(type==BULLET)
         updateBullet();
 
-        if(type==3)
+        if(type==ASTEROID)
         updateAsteroid();
 
         checkNotOutOfBounds();
@@ -59,7 +58,6 @@ public:
     {
         x += -speed*sinf(2*M_PI*angle/360.0f)/100.0f;
         y += speed*cosf(2*M_PI*angle/360.0f)/100.0f;
-        angle += 1;
     }
 
     void updateShip()
@@ -114,7 +112,7 @@ public:
 
     void checkNotOutOfBounds()
     {
-        if( fabs(x)>1.05 || fabs(y) > 1.05)
+        if( fabs(x)>1.15 || fabs(y) > 1.15)
         {
             x=-x;
             y=-y;
@@ -124,7 +122,7 @@ public:
     void draw()
     {
         //Player Ship
-        if(type==1)
+        if(type==SHIP)
         {
             glTranslatef(x,y,0);
             glRotatef(angle,0.0,0.0,1);
@@ -132,7 +130,7 @@ public:
         }
 
         //Bullet
-        if(type==2)
+        if(type==BULLET)
         {
             glTranslatef(x,y,0);
             DrawCircle(0,0,0.005,5);
@@ -140,10 +138,9 @@ public:
 
 
         //Asteroid
-        if(type==3)
+        if(type==ASTEROID)
         {
             glTranslatef(x,y,0);
-            glRotatef(angle,0.0,0.0,1);
             drawShape(shape,GL_LINE_LOOP);
             //drawShape(asteroid[0],GL_LINE_LOOP);
         }
@@ -203,14 +200,9 @@ int main(int argc, char **argv)
     //Int objects
     setShapes();
     object_number=1;
-    object_list[0].type = 1; //Make ship
+    object_list[0].type = SHIP; //Make ship
     object_list[0].shape=ship;
-    addAsteroid(0,0);
-    addAsteroid(0.5,0);
-    addAsteroid(0,.2);
-    addAsteroid(0,0.7);
-    addAsteroid(0.3,0);
-    addAsteroid(1,1);
+
 
     printf("Entering render loop.\n");
     // register callbacks
@@ -228,7 +220,7 @@ void addBullet()
 {
     ++object_number;
     object_list.resize(object_number);
-    object_list[object_number-1].type=2;
+    object_list[object_number-1].type=BULLET;
     object_list[object_number-1].x=object_list[0].x-(0.15*sinf(2*M_PI*object_list[0].angle/360.0f)); //Beware: evil code lurks around here
     object_list[object_number-1].y=object_list[0].y+(0.15*(cosf(2*M_PI*object_list[0].angle/360.0f)));
     object_list[object_number-1].speed=object_list[0].speed+0.5;
@@ -241,13 +233,14 @@ void addAsteroid(float x, float y)
 
     ++object_number;
     object_list.resize(object_number);
-    object_list[object_number-1].type=3;
-    object_list[object_number-1].asteroidType=0;
+    object_list[object_number-1].type = ASTEROID;
     object_list[object_number-1].shape=asteroid[i];
     object_list[object_number-1].x=x;
     object_list[object_number-1].y=y;
-    object_list[object_number-1].speed=object_list[0].speed+0.5;
-    object_list[object_number-1].angle=object_list[0].angle;
+    object_list[object_number-1].speed=0.5;
+    object_list[object_number-1].angle=360*rand()/RAND_MAX;
+    printf("%f\n",     object_list[object_number-1].angle);
+
 
     i++;
 
@@ -265,7 +258,7 @@ void removeObject()
 
 int randNumber(int number)
 {
-   return rand() & number;
+   return (rand() & number);
 }
 
 

@@ -2,14 +2,14 @@
 
 void drawShape(objectShape shape,GLenum type)
 {
-   int i;
+    int i;
 
-   glBegin(type);
-   for(i=0; i<shape.vertexNumber; i++)
-   {
-     glVertex2f(shape.vertex[i][0],shape.vertex[i][1]);
-   }
-   glEnd();
+    glBegin(type);
+    for(i=0; i<shape.vertexNumber; i++)
+    {
+        glVertex2f(shape.vertex[i][0],shape.vertex[i][1]);
+    }
+    glEnd();
 
 }
 
@@ -26,27 +26,28 @@ void setShapes()
 
     ship.vertexNumber=3;
 
-    ship.vertex={ { 0.00 ,0.15},
-                  { 0.05 ,0.00},
-                  {-0.05 ,0.00}};
+    ship.vertex= { { 0.00 ,0.15},
+        { 0.05 ,0.00},
+        {-0.05 ,0.00}
+    };
 
-   for(j=0;j<ASTEROID_SHAPE_NUMBER;j++)
-   {
-    drawAngle=0;
-    size=randNumber(1000)/10000.00;
+    for(j=0; j<ASTEROID_SHAPE_NUMBER; j++)
+    {
+        drawAngle=0;
+        size=randNumber(1000)/10000.00;
 
-    if(size<0.1)
-    {
-        size += 0.1;
+        if(size<0.1)
+        {
+            size += 0.1;
+        }
+        asteroid[j].vertexNumber=10;
+        for(i=0; i<asteroid[1].vertexNumber; i++)
+        {
+            asteroid[j].vertex[i][0] = size*(cosf(drawAngle) + (randNumber(100) - 50)/100.00);
+            asteroid[j].vertex[i][1] = size*(sinf(drawAngle) + (randNumber(100) - 50)/100.00);
+            drawAngle += 2*M_PI/(float)asteroid[1].vertexNumber;
+        }
     }
-    asteroid[j].vertexNumber=8;
-    for(i=0; i<asteroid[1].vertexNumber;i++)
-    {
-        asteroid[j].vertex[i][0] = size*(cosf(drawAngle) + (randNumber(100) - 50)/100.00);
-        asteroid[j].vertex[i][1] = size*(sinf(drawAngle) + (randNumber(100) - 50)/100.00);
-        drawAngle += 2*M_PI/(float)asteroid[1].vertexNumber;
-    }
-   }
 
     printf("Finished Generating Shapes\n");
 
@@ -88,20 +89,3 @@ void DrawCircle(float cx, float cy, float r, int num_segments)
     }
     glEnd();
 }
-
-void DrawAsteroid()
-{
-    glBegin(GL_POLYGON);
-    glVertex2f(0.1,0.1);
-    glVertex2f(0.1,0.0);
-    glVertex2f(0.05,-0.05);
-    glVertex2f(-0.05,-0.05);
-    glVertex2f(-0.05,0.05);
-    glEnd();
-}
-
-void DrawShip()
-{
-
-}
-

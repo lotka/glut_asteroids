@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1364298766 source:c:\users\luka\dropbox\c\asteroids_glut\key.cpp
+1364321986 source:c:\users\luka\dropbox\c\asteroids_glut\key.cpp
 	"main.h"
 
-1364320188 c:\users\luka\dropbox\c\asteroids_glut\main.h
+1364321678 c:\users\luka\dropbox\c\asteroids_glut\main.h
 	<windows.h>
 	<math.h>
 	<GLUT/glut.h>
@@ -243,9 +243,9 @@
 1250305076 c:\program files (x86)\codeblocks\mingw\include\float.h
 	<_mingw.h>
 
-1364320188 source:c:\users\luka\dropbox\c\asteroids_glut\main.cpp
+1364321927 source:c:\users\luka\dropbox\c\asteroids_glut\main.cpp
 	"main.h"
 
-1364319807 source:c:\users\luka\dropbox\c\asteroids_glut\draw.cpp
+1364321678 source:c:\users\luka\dropbox\c\asteroids_glut\draw.cpp
 	"main.h"
 

@@ -15,6 +15,10 @@
 #define ZERO 0
 #define NEGATIVE -1
 #define ASTEROID_SHAPE_NUMBER 10
+#define GARBAGE_OBJECT 0
+#define SHIP 1
+#define BULLET 2
+#define ASTEROID 3
 
 //C++
 #include <vector>
@@ -34,7 +38,7 @@ int randNumber(int number);
 
 typedef struct {
    int vertexNumber;
-   float vertex[8][2];
+   float vertex[10][2];
 } objectShape;
 
 void drawShape(objectShape shape,GLenum type);

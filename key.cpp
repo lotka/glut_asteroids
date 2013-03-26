@@ -10,6 +10,12 @@ void keyPressed(unsigned char key, int x, int y)
     case ' ':
         addBullet();
         break;
+    case 'n':
+        addAsteroid(0,0);
+        break;
+    case 'r':
+        printf("%d\n", randNumber(100));
+        break;
     case 'w':
         thrust=POSITIVE;
         break;
