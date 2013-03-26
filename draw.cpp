@@ -41,7 +41,7 @@ void setShapes()
             size += 0.1;
         }
         asteroid[j].vertexNumber=10;
-        for(i=0; i<asteroid[1].vertexNumber; i++)
+        for(i=0; i<asteroid[i].vertexNumber; i++)
         {
             asteroid[j].vertex[i][0] = size*(cosf(drawAngle) + (randNumber(100) - 50)/100.00);
             asteroid[j].vertex[i][1] = size*(sinf(drawAngle) + (randNumber(100) - 50)/100.00);

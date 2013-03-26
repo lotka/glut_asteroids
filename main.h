@@ -35,6 +35,7 @@ void addAsteroid(float x, float y);
 void removeObject();
 void setShapes();
 int randNumber(int number);
+int detectCollision(int i);
 
 typedef struct {
    int vertexNumber;

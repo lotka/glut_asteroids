@@ -11,7 +11,7 @@ void keyPressed(unsigned char key, int x, int y)
         addBullet();
         break;
     case 'n':
-        addAsteroid(0,0);
+        addAsteroid(.5,.5);
         break;
     case 'r':
         printf("%d\n", randNumber(100));

@@ -18,6 +18,8 @@ public:
     float angle;
     float speed;
     float spin;
+    float real_x;
+    float real_y;
     int type;
     objectShape shape;
 
@@ -36,13 +38,13 @@ public:
     void update()
     {
         if(type==SHIP)
-        updateShip();
+            updateShip();
 
         if(type==BULLET)
-        updateBullet();
+            updateBullet();
 
         if(type==ASTEROID)
-        updateAsteroid();
+            updateAsteroid();
 
         checkNotOutOfBounds();
 
@@ -146,7 +148,7 @@ public:
         }
     }
 
-    int detectCollision ()
+    int collision ()
     {
         return 0;
     }
@@ -159,17 +161,21 @@ void renderScene(void)
 {
     int i;
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     for(i=0; i<object_number; i++)
     {
         object_list[i].update();
+        if(detectCollision(i)==1)
+        {
+            object_list[i].collision();
+        }
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
     for(i=0; i<object_number; i++)
     {
-        glColor3f(1,1,1);
         glPushMatrix();
         glLoadIdentity();
         object_list[i].draw();
@@ -229,7 +235,7 @@ void addBullet()
 
 void addAsteroid(float x, float y)
 {
-    static int i = 0;
+    static int i = 3;
 
     ++object_number;
     object_list.resize(object_number);
@@ -237,7 +243,7 @@ void addAsteroid(float x, float y)
     object_list[object_number-1].shape=asteroid[i];
     object_list[object_number-1].x=x;
     object_list[object_number-1].y=y;
-    object_list[object_number-1].speed=0.5;
+    object_list[object_number-1].speed=0.0;
     object_list[object_number-1].angle=360*rand()/RAND_MAX;
     printf("%f\n",     object_list[object_number-1].angle);
 
@@ -258,8 +264,71 @@ void removeObject()
 
 int randNumber(int number)
 {
-   return (rand() & number);
+    return (rand() & number);
 }
+
+int floatEqual(float a, float b)
+{
+    if(fabs(a-b)<0.001)
+    {
+        return 1;
+    }
+    else return 0;
+}
+
+int detectCollision(int refObject)
+{
+    float refVectorA[2];   //Belongs to the object
+    float refVectorB[2];   //Belongs to the object
+    float incidentVector[2];  //Belongs to other object
+    float xstep=0;
+    float ystep=0;
+    int i = 0;
+    int j = 0;
+    int temp;
+    float angle;
+    int incidentObject = 1;
+    float rotationMatrixDisabler = 1.00;
+
+    /* To go from point A to point B you must do B -A */
+
+    angle = object_list[refObject].angle;
+    if(object_list[refObject].type == ASTEROID)
+    {
+        angle = 0.00; //Asteroids never rotate around their axis so we need to ignore the translation matrix designated for the ship
+    }
+
+    for(i=0; i<object_list[refObject].shape.vertexNumber; i++)
+    {
+        temp = i;
+
+        refVectorA[0] =  (object_list[refObject].shape.vertex[i][0]*cosf(2*M_PI*angle/360.00) - object_list[refObject].shape.vertex[i][1]*sin(2*M_PI*angle/360.00)) +  object_list[refObject].x;
+        refVectorA[1] =  (object_list[refObject].shape.vertex[i][0]*sinf(2*M_PI*angle/360.00) + object_list[refObject].shape.vertex[i][1]*cos(2*M_PI*angle/360.00)) +  object_list[refObject].y;
+
+        if(i==object_list[refObject].shape.vertexNumber -1)
+        {
+            temp=i;
+            i=-1;
+        }
+        refVectorB[0] =  (object_list[refObject].shape.vertex[i+1][0]*cosf(2*M_PI*angle/360.00) - object_list[refObject].shape.vertex[i+1][1]*sin(2*M_PI*angle/360.00)) +  object_list[refObject].x;
+        refVectorB[1] =  (object_list[refObject].shape.vertex[i+1][0]*sinf(2*M_PI*angle/360.00) + object_list[refObject].shape.vertex[i+1][1]*cos(2*M_PI*angle/360.00)) +  object_list[refObject].y;
+
+        i=temp;
+
+        xstep=fabs(refVectorA[0]-refVectorB[0])/100.0;
+        ystep=fabs(refVectorA[0]-refVectorB[0])/100.0;
+
+        for(j=0; j<100; ++j)
+        {
+            refVectorA[0] += xstep;
+            refVectorA[1] += ystep;
+        }
+    }
+
+    return incidentObject;
+}
+
+
 
 
 
